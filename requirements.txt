@@ -1,0 +1,11 @@
+# Core ADK framework (includes dependency on google-genai)
+google-adk[tools]==1.23.0
+
+# Explicitly defining the google-genai version is usually not necessary 
+# if ADK is installed, but keeping it ensures version stability.
+google-genai==1.60.0  
+
+# Optional dependencies you specified
+# google-cloud-aiplatform==1.92.0
+# google-cloud-storage==2.19.0
+# gitpython==3.1.40

@@ -1,0 +1,27 @@
+# ===== Windows OS files =====
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ===== VS Code =====
+.vscode/
+
+# ===== Environment files =====
+.env
+.env.*
+
+# ===== Logs =====
+*.log
+
+# ===== Python (remove if not using) =====
+__pycache__/
+*.pyc
+venv/
+
+# ===== Node / JavaScript (remove if not using) =====
+node_modules/
+dist/
+build/
