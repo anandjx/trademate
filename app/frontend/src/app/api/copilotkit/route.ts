@@ -13,7 +13,7 @@ const serviceAdapter = new ExperimentalEmptyAdapter();
 const runtime = new CopilotRuntime({
     agents: {
         trademate: new HttpAgent({
-            url: "http://localhost:8000/",
+            url: process.env.BACKEND_URL || "http://localhost:8000/",
         }) as any,
     },
 });
