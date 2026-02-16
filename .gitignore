@@ -6,22 +6,55 @@ ehthumbs_vista.db
 Desktop.ini
 $RECYCLE.BIN/
 
-# ===== VS Code =====
-.vscode/
+# ===== Python =====
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.pytest_cache/
+.mypy_cache/
+
+# ===== Node / JavaScript =====
+node_modules/
+dist/
+build/
+.next/
+out/
+yarn-error.log
+package-lock.json
 
 # ===== Environment files =====
 .env
 .env.*
+!.env.example
 
-# ===== Logs =====
-*.log
+# ===== IDEs =====
+.vscode/
+.idea/
+*.swp
+*.swo
 
-# ===== Python (remove if not using) =====
-__pycache__/
-*.pyc
-venv/
+# ===== OS X =====
+.DS_Store
+.AppleDouble
+.LSOverride
 
-# ===== Node / JavaScript (remove if not using) =====
-node_modules/
-dist/
-build/
+# ===== Project Specific =====
+artifacts/
+temp/
+tmp/
+*.html

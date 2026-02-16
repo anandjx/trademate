@@ -41,14 +41,14 @@ class AgentConfiguration:
     """Main configuration for your agent."""
 
     # The AI model to use (you can change this if needed)
-    model: str = os.environ.get("MODEL", "gemini-2.5-flash")
+    model: str = os.environ.get("MODEL", "gemini-2.0-flash")
 
     # Deployment name (can have hyphens, used for display in Agent Engine)
-    deployment_name: str = os.environ.get("AGENT_NAME", "financial-advisor-agent")
+    deployment_name: str = os.environ.get("AGENT_NAME", "trademate")
 
     # Google Cloud settings
     project_id: str | None = None
-    location: str = "us-central1"
+    location: str = "global"
     staging_bucket: str | None = None
 
     def __post_init__(self) -> None:
@@ -82,7 +82,7 @@ class AgentConfiguration:
         #    then fall back to GOOGLE_CLOUD_LOCATION (used locally).
         self.location = os.environ.get("AGENT_LOCATION")
         if not self.location:
-            self.location = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
+            self.location = os.environ.get("GOOGLE_CLOUD_LOCATION", "global")
 
         if not self.location:
             raise ValueError(

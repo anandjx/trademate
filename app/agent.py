@@ -2,31 +2,24 @@
 
 from google.adk.agents import LlmAgent
 from google.adk.tools.agent_tool import AgentTool
-from google.adk.tools import google_search
-from datetime import datetime, timezone
-
-import google.genai.types as genai_types
-
-from google.adk.planners import BuiltInPlanner
 
 from app.config import config
 
 from . import prompt
-from .sub_agents.data_analyst import data_analyst_agent
-from .sub_agents.execution_analyst import execution_analyst_agent
-from .sub_agents.risk_analyst import risk_analyst_agent
-from .sub_agents.trading_analyst import trading_analyst_agent
-
-
-MODEL = "gemini-2.0-flash"
+from .sub_agents.technical_analyst import technical_analyst_agent
+from .sub_agents.market_analyst import market_analyst_agent
+from .sub_agents.market_analyst.tools import submit_market_report # Moved here for stability
+from .sub_agents.quant_synthesis.tools import quant_synthesis_tool  # Stateless Function Tool
+from .sub_agents.investment_consultant.tools import investment_consultant_tool # New Strategy Tool
+# Import Oracle's TOOL directly, not the Agent wrapper
+from .sub_agents.oracle_predictor.tools import clean_and_forecast
+from .sub_agents.human_gate import human_gate_tool
+from .sub_agents.report_generator.tools import equity_report_tool  # Equity Research Report
 
 
 financial_coordinator = LlmAgent(
     name=config.internal_agent_name,
     model=config.model,
-    # planner=BuiltInPlanner(
-    #     thinking_config=genai_types.ThinkingConfig(include_thoughts=True)
-    # ),
     description=(
         "An intelligent multiagent system that guide users through a structured process to receive financial "
         "advice by orchestrating a series of expert subagents. help them "
@@ -36,10 +29,14 @@ financial_coordinator = LlmAgent(
     instruction=prompt.FINANCIAL_COORDINATOR_PROMPT,
     output_key="financial_coordinator_output",
     tools=[        
-        AgentTool(agent=data_analyst_agent),
-        AgentTool(agent=trading_analyst_agent),
-        AgentTool(agent=execution_analyst_agent),
-        AgentTool(agent=risk_analyst_agent),
+        AgentTool(agent=market_analyst_agent),
+        submit_market_report, # Coordinator handles submission now
+        AgentTool(agent=technical_analyst_agent),
+        quant_synthesis_tool,  # New Stateless Tool
+        investment_consultant_tool, # New Strategy Tool
+        clean_and_forecast,  # Direct FunctionTool, NOT wrapped in AgentTool
+        human_gate_tool, # Gatekeeper
+        equity_report_tool,  # Deterministic HTML Report Generator
     ],
 )
 
