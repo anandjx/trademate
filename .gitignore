@@ -58,3 +58,11 @@ artifacts/
 temp/
 tmp/
 *.html
+
+# ===== Dev Scripts (Ignored) =====
+debug_*.py
+test_*.py
+preview_*.py
+verify_*.py
+stock_manual_analysis.py
+*.spec.py

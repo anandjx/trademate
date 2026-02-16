@@ -1,5 +1,5 @@
-# Python 3.11 Slim Base
-FROM python:3.11-slim
+# Python 3.11 Full Base (safer for data science libs)
+FROM python:3.11
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \

@@ -70,6 +70,7 @@ Return a well-structured Markdown string.
 *   *If none found, explicitly state this.*
 
 **3. Recent News, Stock Performance Context & Market Sentiment:**
+*   A snapshot of the company's history, the products and/or services it offers, the type of business model, estimated market share, and recent developments related to the corporation. This section can be short and consolidated
 *   **Significant News:** Summary of major news items impacting the company/stock (e.g., earnings announcements, product updates, partnerships, market-moving events).
 *   **Verified Executive / Analyst Quote (If Available):**
     *   Include ONE short, verbatim quote from:
