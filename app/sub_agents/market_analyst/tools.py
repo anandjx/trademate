@@ -57,6 +57,13 @@ def get_market_data_func(ticker: str, tool_context: ToolContext) -> str:
     # Emit state for frontend
     tool_context.state["pipeline_stage"] = "market_scan"
     tool_context.state["target_ticker"] = ticker
+    
+    # --- VISIBLE LOGGING FOR USER ---
+    print(f"\n{'='*50}")
+    print(f"🚀 USER REQUESTED TICKER: {ticker}")
+    print(f"{'='*50}\n")
+    # --------------------------------
+
     stages = tool_context.state.get("stages_completed", [])
     if "market_scan" not in stages:
         stages.append("market_scan")

@@ -37,8 +37,44 @@ logger = logging.getLogger("EquityReportGenerator")
 # ─────────────────────────────────────────────────
 
 _CURRENCY_MAP = {
-    "USD": "$", "INR": "\u20b9", "GBP": "\u00a3", "EUR": "\u20ac", "JPY": "\u00a5",
-    "CNY": "\u00a5", "KRW": "\u20a9", "HKD": "HK$", "SGD": "S$", "AUD": "A$", "CAD": "C$",
+    "USD": "$",   "INR": "\u20b9",   "GBP": "\u00a3",   "EUR": "\u20ac",   "JPY": "\u00a5",
+    "CNY": "\u00a5",   "KRW": "\u20a9",   "HKD": "HK$", "SGD": "S$",  "AUD": "A$",
+    "CAD": "C$",  "CHF": "CHF ", "TWD": "NT$", "ZAR": "R",   "SAR": "SR ",
+    "SEK": "kr ", "NOK": "kr ", "DKK": "kr ", "BRL": "R$",  "MXN": "MX$",
+    "IDR": "Rp ", "MYR": "RM ", "THB": "\u0e3f",   "ILS": "\u20aa",   "TRY": "\u20ba",
+    "PLN": "z\u0142 ", "NZD": "NZ$",
+}
+
+# Yahoo Finance suffix -> currency code  (mirrors frontend SUFFIX_MAP exactly)
+_SUFFIX_MAP = {
+    ".NS": "INR", ".BO": "INR",                                     # India
+    ".L":  "GBP",                                                    # London
+    ".PA": "EUR", ".AS": "EUR", ".BR": "EUR", ".LS": "EUR",         # Euronext
+    ".MI": "EUR", ".MC": "EUR", ".HE": "EUR", ".VI": "EUR",         # Milan/Madrid/Helsinki/Vienna
+    ".DE": "EUR",                                                    # Deutsche Boerse
+    ".T":  "JPY",                                                    # Tokyo
+    ".SS": "CNY", ".SZ": "CNY",                                     # Shanghai/Shenzhen
+    ".HK": "HKD",                                                    # Hong Kong
+    ".SI": "SGD",                                                    # Singapore
+    ".AX": "AUD",                                                    # Australia
+    ".TO": "CAD",                                                    # Toronto
+    ".SW": "CHF",                                                    # SIX Swiss
+    ".KS": "KRW", ".KQ": "KRW",                                     # Korea
+    ".TW": "TWD", ".TWO": "TWD",                                    # Taiwan
+    ".JO": "ZAR",                                                    # Johannesburg
+    ".SR": "SAR",                                                    # Saudi
+    ".ST": "SEK",                                                    # Stockholm
+    ".OL": "NOK",                                                    # Oslo
+    ".CO": "DKK",                                                    # Copenhagen
+    ".SA": "BRL",                                                    # B3 Sao Paulo
+    ".MX": "MXN",                                                    # Mexico
+    ".JK": "IDR",                                                    # Jakarta
+    ".KL": "MYR",                                                    # Kuala Lumpur
+    ".BK": "THB",                                                    # Bangkok
+    ".TA": "ILS",                                                    # Tel Aviv
+    ".IS": "TRY",                                                    # Istanbul
+    ".WA": "PLN",                                                    # Warsaw
+    ".NZ": "NZD",                                                    # New Zealand
 }
 
 def _infer_currency(ticker: str) -> str:
@@ -46,14 +82,11 @@ def _infer_currency(ticker: str) -> str:
     if not ticker:
         return "USD"
     t = ticker.upper()
-    if t.endswith(".NS") or t.endswith(".BO"): return "INR"
-    if t.endswith(".L"): return "GBP"
-    if t.endswith(".PA") or t.endswith(".DE"): return "EUR"
-    if t.endswith(".T"): return "JPY"
-    if t.endswith(".HK"): return "HKD"
-    if t.endswith(".SI"): return "SGD"
-    if t.endswith(".AX"): return "AUD"
-    if t.endswith(".TO"): return "CAD"
+    dot = t.rfind(".")
+    if dot != -1:
+        suffix = t[dot:]
+        if suffix in _SUFFIX_MAP:
+            return _SUFFIX_MAP[suffix]
     return "USD"
 
 def _csym(ticker: str) -> str:

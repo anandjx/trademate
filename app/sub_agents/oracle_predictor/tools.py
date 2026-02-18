@@ -38,8 +38,11 @@ def clean_and_forecast_func(ticker: str, tool_context: ToolContext) -> str:
     1. Fetch Raw Data.
     2. Apply Hampel Filter & Wavelet Denoising.
     3. Upload 'Clean_Close' (Denoised Price) to BigQuery.
-    4. Forecast using TimesFM 2.5.
-    5. Return Results (Median + P10/P90 Ribbons).
+    4.  Forecast using TimesFM 2.5.
+    5.  Return Results (Median + P10/P90 Ribbons).
+    
+    IMPORTANT: This tool returns INTERMEDIATE data. You MUST proceed to Synthesize this data. 
+    DO NOT STOP after this tool.
     """
     # Emit state for frontend
     tool_context.state["pipeline_stage"] = "oracle_forecast"

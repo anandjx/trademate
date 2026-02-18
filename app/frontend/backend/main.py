@@ -19,16 +19,25 @@ app_dir = Path(__file__).parent.parent.parent  # app/
 project_root = app_dir.parent  # trademate/
 sys.path.insert(0, str(project_root))
 
+print(f"DEBUG: Starting main.py... App dir: {app_dir}")
+
 # Load environment variables from app/.env
 env_path = app_dir / ".env"
 if env_path.exists():
     load_dotenv(env_path)
+    print("DEBUG: Loaded .env")
+else:
+    print("DEBUG: No .env found")
 
+print("DEBUG: Importing ag_ui_adk...")
 # Import AG-UI middleware (CopilotKit official package)
 from ag_ui_adk import ADKAgent, add_adk_fastapi_endpoint
+print("DEBUG: Imported ag_ui_adk successfully.")
 
+print("DEBUG: Importing root_agent...")
 # Import the EXISTING root_agent - no modifications needed
 from app.agent import root_agent
+print("DEBUG: Imported root_agent successfully.")
 
 # Create AG-UI wrapper around the existing ADK agent
 adk_agent = ADKAgent(
@@ -58,6 +67,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Request logging removed to prevent Starlette RuntimeError with BaseHTTPMiddleware
+# calling await request.body() inside middleware can break the request stream
+
 
 
 @app.get("/health")

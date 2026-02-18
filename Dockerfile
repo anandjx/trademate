@@ -1,32 +1,27 @@
-# Python 3.11 Full Base (safer for data science libs)
-FROM python:3.11
+# Dockerfile (Refactored based on Locus reference)
+FROM python:3.11-slim
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PORT=8080
-
-# Set work directory
-WORKDIR /app
+# Prevent Python from writing pyc files to disc
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y \
     build-essential \
-    curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+WORKDIR /app
 
-# Copy application code
+# Copy requirements first to leverage Docker cache
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the entire project
 COPY . .
 
-# Expose port (Cloud Run expects 8080)
+# Expose the port
 EXPOSE 8080
 
 # Command to run the application
-# We use python -m to run the module, but the file structure is a bit unique.
-# Running as a script is safer given the sys.path modification in main.py.
-CMD ["python", "app/frontend/backend/main.py"]
+# Using uvicorn directly as in Locus reference
+CMD ["uvicorn", "app.frontend.backend.main:app", "--host", "0.0.0.0", "--port", "8080"]

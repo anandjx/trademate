@@ -3,27 +3,32 @@ import {
     ExperimentalEmptyAdapter,
     copilotRuntimeNextJSAppRouterEndpoint,
 } from "@copilotkit/runtime";
-import { HttpAgent } from "@ag-ui/client";
+import { LangGraphHttpAgent } from "@copilotkit/runtime/langgraph";
 import { NextRequest } from "next/server";
 
-// Create a service adapter for the CopilotKit runtime
+export const runtime = "nodejs";
+
+// 1. Use Empty Adapter (The backend handles the intelligence)
 const serviceAdapter = new ExperimentalEmptyAdapter();
 
-// Create the main CopilotRuntime instance
-const runtime = new CopilotRuntime({
+// 2. Define the Runtime and register your Remote Agent
+const runtimeInstance = new CopilotRuntime({
     agents: {
-        trademate: new HttpAgent({
-            url: process.env.BACKEND_URL || "http://localhost:8000/",
-        }) as any,
+        trademate: new LangGraphHttpAgent({
+            // "trademate" must match the app_name="trademate" in your main.py
+            url: process.env.REMOTE_ACTION_URL || "http://localhost:8000",
+        }),
     },
 });
 
-// Export the POST handler for the API route
 export const POST = async (req: NextRequest) => {
     const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
-        runtime,
-        serviceAdapter,
+        runtime: runtimeInstance,
+        serviceAdapter, // Pass the adapter here, NOT the agent
         endpoint: "/api/copilotkit",
     });
+
     return handleRequest(req);
 };
+
+
